@@ -42,12 +42,7 @@ def delete() -> int:
     return d
 
 def insert() -> int:
-    d = rand.randint(0, max_int)
-    while True: 
-        d = rand.randint(0, max_int)
-        if d in _set: continue
-        _set.add(d)
-        break
+    d = get_any_from_not_set(_set)
     input.write(f"I {d}\n")
     return d
 
