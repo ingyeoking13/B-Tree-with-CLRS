@@ -83,8 +83,8 @@ funcs = [ update, delete, search, insert]
 # Insert Update Delete Search (log n)
 # operation
 # update, delete, search, insert
-n = int(5e3)
-_try = int(1e3)
+n = int(5e6)
+_try = int(1e5)
 
 init_tree(n)
 
