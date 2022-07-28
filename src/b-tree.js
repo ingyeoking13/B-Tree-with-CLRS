@@ -25,20 +25,39 @@ class BTree {
   insert = (k) => {
     const root = this.root;
     if (root.n == 2 * this.degree - 1) {
-      const newNode = Node();
+      const newNode = new Node();
       this.root = newNode;
       newNode.leaf = false;
       newNode.n = 0;
-      newNode.c = root;
+      newNode.children = [root];
+      this.splitChild(newNode, 0);
       this.insertNonFull(newNode, k);
     } else {
       this.insertNonFull(root, k);
     }
   };
 
+  splitChild = (node, idx) => {
+    const zChild = new Node();
+    const yChild = node.children[idx];
+    zChild.leaf = yChild.leaf;
+    zChild.n = this.degree - 1;
+    for (let i = 0; i < zChild.n; i++) {
+      zChild.keys[i] = yChild.keys[this.degree + i - 1];
+    }
+    if (!yChild.leaf) {
+      for (let i = 0; i < this.degree; i++) {
+        zChild.children[i] = yChild.children[this.degree + i];
+      }
+    }
+    yChild.n = this.degree - 1;
+    for (let i = node.n; i > idx; i--) {
+      x.children[i] = x.children[i - 1];
+    }
+  };
+
   insertNonFull = (x, k) => {
     let i = x.n;
-    console.log(x, x.keys);
     if (x.leaf) {
       while (i >= 1 && k < x.children[i]) {
         x.keys[i] = x.keys[i - 1];
@@ -51,9 +70,7 @@ class BTree {
   };
 
   show = () => {
-    console.log('wh', this.root.keys);
     [...this.root.keys].forEach((i) => {
-      console.log(i);
       process.stdout.write(`${i} `);
     });
   };
@@ -61,5 +78,5 @@ class BTree {
 
 tree = new BTree();
 tree.init();
-tree.insert(1);
+[1, 2, 3, 4].forEach((i) => tree.insert(i));
 tree.show();
