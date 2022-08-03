@@ -37,23 +37,30 @@ class BTree {
     }
   };
 
-  splitChild = (node, idx) => {
+  splitChild = (xNode, idx) => {
     const zChild = new Node();
-    const yChild = node.children[idx];
+    const yChild = xNode.children[idx];
     zChild.leaf = yChild.leaf;
     zChild.n = this.degree - 1;
-    for (let i = 0; i < zChild.n; i++) {
-      zChild.keys[i] = yChild.keys[this.degree + i - 1];
+    // move keys from y to z
+    for (let i = 0; i < this.degree - 1; i++) {
+      zChild.keys[i] = yChild.keys[this.degree + i];
     }
+    // move children from y to z
     if (!yChild.leaf) {
       for (let i = 0; i < this.degree; i++) {
         zChild.children[i] = yChild.children[this.degree + i];
       }
     }
+
     yChild.n = this.degree - 1;
-    for (let i = node.n; i > idx; i--) {
-      x.children[i] = x.children[i - 1];
+    // move+ one xNode children
+    for (let i = xNode.n; i > idx; i--) {
+      xNode.children[i] = xNode.children[i-1];
     }
+    xNode.children[idx+1] = zChild;
+
+    xNode.n++;
   };
 
   insertNonFull = (x, k) => {
